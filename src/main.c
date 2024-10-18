@@ -24,16 +24,36 @@ For a C++ project simply rename the file to .cpp and re-run the build script
 
 */
 
+#include <stdio.h>
 #include "raylib.h"
-
+#include "cJSON.h"
 #include "resource_dir.h"	// utility header for SearchAndSetResourceDir
 
-int main ()
+int main (void)
 {
+	// create a cJSON object 
+	cJSON* json = cJSON_CreateObject();
+	cJSON_AddStringToObject(json, "name", "John Doe");
+	cJSON_AddNumberToObject(json, "age", 30);
+	cJSON_AddStringToObject(json, "email", "john.doe@example.com");
+	// convert the cJSON object to a JSON string 
+	char* json_str = cJSON_Print(json);
+
+	// write the JSON string to a file 
+	FILE* fp = fopen("data.json", "w");
+	if ( fp == NULL ) {
+		printf("Error: Unable to open the file.\n");
+		return 1;
+	}
+	printf("%s\n", json_str);
+	fputs(json_str, fp);
+	fclose;
+		// free the JSON string and cJSON object 
+		cJSON_free(json_str);
+	cJSON_Delete(json);
+
 	// Tell the window to use vysnc and work on high DPI displays
 	SetConfigFlags(FLAG_VSYNC_HINT | FLAG_WINDOW_HIGHDPI);
-
-	// Create the window and OpenGL context
 	InitWindow(1280, 800, "Hello Raylib");
 
 	// Utility function from resource_dir.h to find the resources folder and set it as the current working directory so we can load from it
@@ -61,11 +81,8 @@ int main ()
 		EndDrawing();
 	}
 
-	// cleanup
-	// unload our texture so it can be cleaned up
 	UnloadTexture(wabbit);
 
-	// destory the window and cleanup the OpenGL context
 	CloseWindow();
 	return 0;
 }
