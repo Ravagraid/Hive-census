@@ -1,14 +1,15 @@
-#include <stdio.h>
-#include "raylib.h"
 #include "cJSON.h"
+#include "raylib.h"
 #include "resource_dir.h"
+#include <stdio.h>
+#define RAYGUI_IMPLEMENTATION
+#include "raygui.h"
 
-#define SCREEN_WIDTH (800)
-#define SCREEN_HEIGHT (450)
-#define WINDOW_TITLE "Hello Hive Scum!"
+#define SCREEN_WIDTH	(800)
+#define SCREEN_HEIGHT	(450)
+#define WINDOW_TITLE	"Death to the Spyrers!"
 
-int main (void)
-{
+int main (void) {
 	// create a cJSON object 
 	cJSON* json = cJSON_CreateObject();
 	cJSON_AddStringToObject(json, "name", "John Doe");
@@ -30,26 +31,16 @@ int main (void)
 	SetTargetFPS(60);
 
 	SearchAndSetResourceDir("resources");
-	Texture2D texture = LoadTexture("wabbit_alpha.png");
-
+	Font font = LoadFont("ShureTechMonoNerdFontMono-Regular.ttf");
 	// game loop
-	while (!WindowShouldClose())
-	{
+	while ( !WindowShouldClose() ) {
 		// drawing
 		BeginDrawing();
+			ClearBackground(RAYWHITE);
 
-		// Setup the backbuffer for drawing (clear color and depth buffers)
-		ClearBackground(RAYWHITE);
-
-		const int texture_x = SCREEN_WIDTH / 2 - texture.width / 2;
-		const int texture_y = SCREEN_HEIGHT / 2 - texture.width / 2;
-		DrawTexture(texture, texture_x, texture_y, WHITE);
-
-		const char* text = WINDOW_TITLE;
-		const Vector2 text_size = MeasureTextEx(GetFontDefault(), text, 20, 1);
-		DrawText(json_str, SCREEN_WIDTH / 2 - text_size.x / 2, texture_y + texture.height + text_size.y + 10, 20, BLACK);
-		
-		// end the frame and get ready for the next one  (display frame, poll input, etc...)
+			const char* text = WINDOW_TITLE;
+			const Vector2 text_size = MeasureTextEx(font, text, 20, 1);
+			DrawTextEx(font, text, (Vector2){ SCREEN_WIDTH / 2 - text_size.x / 1.25, text_size.y + 10 }, (float)font.baseSize, 1, BLACK);
 		EndDrawing();
 	}
 
